@@ -11,7 +11,7 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
         <div className="flex items-center gap-2">
           <Button asChild>
-            <Link href="/dashboard/bookings/new">
+            <Link href="/dashboard/create-booking">
               <Calendar className="mr-2 h-4 w-4" />
               New Booking
             </Link>
