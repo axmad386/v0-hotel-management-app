@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableViewOptions } from "./data-table-view-options"
+import { DataTableSortControls } from "./data-table-sort-controls"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -27,6 +28,7 @@ interface DataTableProps<TData, TValue> {
   searchPlaceholder?: string
   filterColumn?: string
   filterOptions?: { label: string; value: string }[]
+  showSortControls?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +38,7 @@ export function DataTable<TData, TValue>({
   searchPlaceholder = "Search...",
   filterColumn,
   filterOptions,
+  showSortControls = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -71,23 +74,28 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-1 items-center space-x-2">
-          <Input
-            placeholder={searchPlaceholder}
-            value={globalFilter}
-            onChange={(event) => setGlobalFilter(event.target.value)}
-            className="max-w-sm"
-          />
-          {globalFilter && (
-            <Button variant="ghost" onClick={() => setGlobalFilter("")} className="h-8 px-2 lg:px-3">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Clear search</span>
-            </Button>
-          )}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-1 items-center space-x-2">
+            <Input
+              placeholder={searchPlaceholder}
+              value={globalFilter}
+              onChange={(event) => setGlobalFilter(event.target.value)}
+              className="max-w-sm"
+            />
+            {globalFilter && (
+              <Button variant="ghost" onClick={() => setGlobalFilter("")} className="h-8 px-2 lg:px-3">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Clear search</span>
+              </Button>
+            )}
+          </div>
+          <DataTableViewOptions table={table} />
         </div>
-        <DataTableViewOptions table={table} />
+
+        {showSortControls && <DataTableSortControls table={table} />}
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>

@@ -5,7 +5,20 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Building2, Calendar, CreditCard, Home, Hotel, LogOut, Menu, Settings, User, Users, X } from "lucide-react"
+import {
+  Building2,
+  Calendar,
+  CreditCard,
+  Home,
+  Hotel,
+  LogOut,
+  Menu,
+  Package,
+  Settings,
+  User,
+  Users,
+  X,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -33,6 +46,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Rooms", href: "/dashboard/rooms", icon: Hotel },
     { name: "Bookings", href: "/dashboard/bookings", icon: Calendar },
     { name: "Guests", href: "/dashboard/guests", icon: Users },
+    { name: "Inventory", href: "/dashboard/inventory", icon: Package },
     { name: "Finance", href: "/dashboard/finance", icon: CreditCard },
     { name: "Users & Roles", href: "/dashboard/users", icon: User },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
@@ -47,7 +61,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const NavItems = () => (
     <div className="space-y-1">
       {navigation.map((item) => {
-        const isActive = pathname === item.href
+        const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
         return (
           <Link
             key={item.name}
