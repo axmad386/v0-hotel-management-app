@@ -136,7 +136,7 @@ export default function NewBookingPage() {
                     />
                   </div>
                   <Button variant="outline" asChild>
-                    <Link href="/dashboard/guests/new">
+                    <Link href="/dashboard/create-guest">
                       <Plus className="mr-2 h-4 w-4" />
                       New Guest
                     </Link>

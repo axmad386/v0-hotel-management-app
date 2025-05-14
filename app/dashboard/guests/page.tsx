@@ -71,7 +71,7 @@ export default function GuestsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Guests</h1>
         <Button asChild>
-          <Link href="/dashboard/guests/new">
+          <Link href="/dashboard/create-guest">
             <Plus className="mr-2 h-4 w-4" />
             Add Guest
           </Link>

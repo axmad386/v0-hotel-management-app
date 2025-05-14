@@ -1,21 +1,43 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Eye, Hotel, MoreHorizontal, Pencil, Plus, Trash } from "lucide-react"
+import { ArrowLeft, Eye, Hotel, MoreHorizontal, Pencil, Plus, Trash } from "lucide-react"
 import { DataTable } from "@/components/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 import { ConfirmDialog } from "@/components/confirm-dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
+// Sample data for properties
+const propertiesData = [
+  {
+    id: "1",
+    name: "Grand Hotel",
+    type: "hotel",
+    address: "123 Main St, New York, NY",
+    city: "New York",
+    state: "NY",
+    zipCode: "10001",
+    country: "USA",
+    rooms: 32,
+    occupancy: "75%",
+    status: "active",
+    description: "A luxury hotel in the heart of New York City with modern amenities and exceptional service.",
+    amenities: ["Pool", "Spa", "Restaurant", "Gym", "Conference Rooms", "Room Service"],
+    images: ["/placeholder.svg?height=400&width=600"],
+    createdAt: "2024-01-15",
+  },
+]
+
 // Sample data for rooms
 const roomsData = [
   {
     id: "1",
+    propertyId: "1",
     number: "101",
     type: "Standard",
     property: "Grand Hotel",
@@ -25,6 +47,7 @@ const roomsData = [
   },
   {
     id: "2",
+    propertyId: "1",
     number: "102",
     type: "Standard",
     property: "Grand Hotel",
@@ -34,6 +57,7 @@ const roomsData = [
   },
   {
     id: "3",
+    propertyId: "1",
     number: "201",
     type: "Deluxe",
     property: "Grand Hotel",
@@ -43,6 +67,7 @@ const roomsData = [
   },
   {
     id: "4",
+    propertyId: "1",
     number: "301",
     type: "Suite",
     property: "Grand Hotel",
@@ -51,34 +76,8 @@ const roomsData = [
     status: "maintenance",
   },
   {
-    id: "5",
-    number: "A1",
-    type: "Single",
-    property: "City Boarding House",
-    capacity: 1,
-    rate: "$50",
-    status: "available",
-  },
-  {
-    id: "6",
-    number: "A2",
-    type: "Double",
-    property: "City Boarding House",
-    capacity: 2,
-    rate: "$80",
-    status: "occupied",
-  },
-  {
-    id: "7",
-    number: "B1",
-    type: "Single",
-    property: "City Boarding House",
-    capacity: 1,
-    rate: "$50",
-    status: "available",
-  },
-  {
     id: "8",
+    propertyId: "1",
     number: "103",
     type: "Standard",
     property: "Grand Hotel",
@@ -88,6 +87,7 @@ const roomsData = [
   },
   {
     id: "9",
+    propertyId: "1",
     number: "104",
     type: "Standard",
     property: "Grand Hotel",
@@ -97,6 +97,7 @@ const roomsData = [
   },
   {
     id: "10",
+    propertyId: "1",
     number: "202",
     type: "Deluxe",
     property: "Grand Hotel",
@@ -106,6 +107,7 @@ const roomsData = [
   },
   {
     id: "11",
+    propertyId: "1",
     number: "302",
     type: "Suite",
     property: "Grand Hotel",
@@ -113,47 +115,26 @@ const roomsData = [
     rate: "$250",
     status: "occupied",
   },
-  {
-    id: "12",
-    number: "A3",
-    type: "Single",
-    property: "City Boarding House",
-    capacity: 1,
-    rate: "$50",
-    status: "maintenance",
-  },
-  {
-    id: "13",
-    number: "A4",
-    type: "Double",
-    property: "City Boarding House",
-    capacity: 2,
-    rate: "$80",
-    status: "available",
-  },
-  {
-    id: "14",
-    number: "B2",
-    type: "Single",
-    property: "City Boarding House",
-    capacity: 1,
-    rate: "$50",
-    status: "occupied",
-  },
-  {
-    id: "15",
-    number: "B3",
-    type: "Single",
-    property: "City Boarding House",
-    capacity: 1,
-    rate: "$50",
-    status: "available",
-  },
 ]
 
-export default function RoomsPage() {
+export default function PropertyRoomsPage() {
+  const params = useParams()
   const router = useRouter()
-  const [rooms, setRooms] = useState(roomsData)
+  const [property, setProperty] = useState<any>(null)
+  const [rooms, setRooms] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // In a real app, this would fetch from an API
+    const foundProperty = propertiesData.find((p) => p.id === params.id)
+    if (foundProperty) {
+      setProperty(foundProperty)
+      // Filter rooms for this property
+      const propertyRooms = roomsData.filter((room) => room.propertyId === params.id)
+      setRooms(propertyRooms)
+    }
+    setLoading(false)
+  }, [params.id])
 
   const handleDelete = (id: string) => {
     setRooms(rooms.filter((room) => room.id !== id))
@@ -174,13 +155,6 @@ export default function RoomsPage() {
     {
       accessorKey: "type",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
-      filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id))
-      },
-    },
-    {
-      accessorKey: "property",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Property" />,
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id))
       },
@@ -268,12 +242,38 @@ export default function RoomsPage() {
     },
   ]
 
+  if (loading) {
+    return <div className="p-8">Loading...</div>
+  }
+
+  if (!property) {
+    return (
+      <div className="p-8">
+        <h1 className="text-2xl font-bold">Property not found</h1>
+        <Button asChild className="mt-4">
+          <Link href="/dashboard/properties">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Properties
+          </Link>
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Rooms</h1>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="icon" asChild>
+            <Link href={`/dashboard/properties/${params.id}`}>
+              <ArrowLeft className="h-4 w-4" />
+              <span className="sr-only">Back</span>
+            </Link>
+          </Button>
+          <h1 className="text-2xl font-bold tracking-tight">Rooms - {property.name}</h1>
+        </div>
         <Button asChild>
-          <Link href="/dashboard/create-room">
+          <Link href={`/dashboard/properties/${params.id}/rooms/new`}>
             <Plus className="mr-2 h-4 w-4" />
             Add Room
           </Link>
@@ -288,7 +288,7 @@ export default function RoomsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{rooms.length}</div>
-              <p className="text-xs text-muted-foreground">Across all properties</p>
+              <p className="text-xs text-muted-foreground">In this property</p>
             </CardContent>
           </Card>
           <Card>
@@ -325,7 +325,7 @@ export default function RoomsPage() {
         <Card>
           <CardHeader>
             <CardTitle>All Rooms</CardTitle>
-            <CardDescription>Manage your rooms and view their details</CardDescription>
+            <CardDescription>Manage rooms for {property.name}</CardDescription>
           </CardHeader>
           <CardContent>
             <DataTable columns={columns} data={rooms} searchPlaceholder="Search rooms..." />
