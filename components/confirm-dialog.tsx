@@ -20,17 +20,10 @@ interface ConfirmDialogProps {
   trigger?: React.ReactNode
 }
 
-export function ConfirmDialog({
-  title,
-  description,
-  onConfirm,
-  trigger,
-}: ConfirmDialogProps) {
+export function ConfirmDialog({ title, description, onConfirm, trigger }: ConfirmDialogProps) {
   return (
     <AlertDialog>
-      {trigger && 
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
-      }
+      {trigger && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
