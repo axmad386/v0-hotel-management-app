@@ -4,9 +4,10 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Eye, MoreHorizontal, Pencil, Plus, Trash } from "lucide-react"
+import { DataTable } from "@/components/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
@@ -165,7 +166,7 @@ export default function BookingsPage() {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Guest" />,
       cell: ({ row }) => (
         <div className="font-medium">
-          <Link href={`/dashboard/bookings/(id)/${row.original.id}`} className="hover:underline">
+          <Link href={`/dashboard/bookings/${row.original.id}`} className="hover:underline">
             {row.getValue("guest")}
           </Link>
         </div>
@@ -250,26 +251,26 @@ export default function BookingsPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <Link href={`/dashboard/bookings/(id)/${booking.id}`}>
+                <Link href={`/dashboard/bookings/${booking.id}`}>
                   <Eye className="mr-2 h-4 w-4" />
                   View Details
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/dashboard/bookings/(id)/${booking.id}/edit`}>
+                <Link href={`/dashboard/bookings/${booking.id}/edit`}>
                   <Pencil className="mr-2 h-4 w-4" />
                   Edit Booking
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/dashboard/bookings/(id)/${booking.id}/invoice`}>
+                <Link href={`/dashboard/bookings/${booking.id}/invoice`}>
                   <Calendar className="mr-2 h-4 w-4" />
                   View Invoice
                 </Link>
               </DropdownMenuItem>
               {booking.status === "confirmed" && (
                 <DropdownMenuItem asChild>
-                  <Link href={`/dashboard/bookings/(id)/${booking.id}/check-in`}>
+                  <Link href={`/dashboard/bookings/${booking.id}/check-in`}>
                     <Calendar className="mr-2 h-4 w-4" />
                     Check In
                   </Link>
@@ -277,7 +278,7 @@ export default function BookingsPage() {
               )}
               {booking.status === "checked-in" && (
                 <DropdownMenuItem asChild>
-                  <Link href={`/dashboard/bookings/(id)/${booking.id}/check-out`}>
+                  <Link href={`/dashboard/bookings/${booking.id}/check-out`}>
                     <Calendar className="mr-2 h-4 w-4" />
                     Check Out
                   </Link>
@@ -368,9 +369,19 @@ export default function BookingsPage() {
         </div>
         <Card>
           <CardHeader>
-            <CardTitle>All Bookings
-          </CardTitle>
+            <CardTitle>All Bookings</CardTitle>
+            <CardDescription>Manage your bookings and view their details</CardDescription>
           </CardHeader>
           <CardContent>
-
-\
+            <DataTable
+              columns={columns}
+              data={bookings}
+              searchPlaceholder="Search bookings..."
+              showSortControls={true}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}

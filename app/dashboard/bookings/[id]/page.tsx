@@ -510,12 +510,9 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
       </div>
 
       <ConfirmDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
         title="Delete Booking"
         description="Are you sure you want to delete this booking? This action cannot be undone."
         onConfirm={handleDeleteBooking}
-        loading={isDeleting}
       />
     </div>
   )

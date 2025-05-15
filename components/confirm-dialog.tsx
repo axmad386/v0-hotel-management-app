@@ -16,10 +16,8 @@ import {
 interface ConfirmDialogProps {
   title: string
   description: string
-  onConfirm: () => void
-  trigger: React.ReactNode
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
-  className?: string
+  onConfirm?: () => void
+  trigger?: React.ReactNode
 }
 
 export function ConfirmDialog({
@@ -27,12 +25,12 @@ export function ConfirmDialog({
   description,
   onConfirm,
   trigger,
-  variant = "default",
-  className,
 }: ConfirmDialogProps) {
   return (
     <AlertDialog>
+      {trigger && 
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      }
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
